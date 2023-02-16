@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "strict": true,
+    "module": "commonjs",
+    "target": "es2019",
+    "esModuleInterop": true,
+    "sourceMap": false,
+    "rootDir": "src",
+    "outDir": "dist/js",
+    "noEmitOnError": true,
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "typeRoots": ["node_modules/@types"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "exclude": ["./webpack/*.js", "./dist/**/*.js", "./dist.old/**/*.js"]
+}
