@@ -1,5 +1,5 @@
+import { MainView } from "@/components/views/main-view";
+
 import "./app.sass";
 
-export const App = () => {
-  return <h1>YouTool</h1>;
-};
+export const App = () => <MainView />;
