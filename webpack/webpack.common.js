@@ -10,6 +10,7 @@ const rootDir = resolve(__dirname, "..");
 module.exports = {
   entry: {
     popup: resolve(rootDir, "src", "popup.tsx"),
+    block: resolve(rootDir, "src", "block.tsx"),
   },
   output: {
     path: resolve(rootDir, "dist", "js"),

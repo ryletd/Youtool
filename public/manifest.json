@@ -17,7 +17,7 @@
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],
-      "js": ["js/vendor.js"],
+      "js": ["js/vendor.js", "js/block.js"],
       "all_frames": true,
       "run_at": "document_end"
     }

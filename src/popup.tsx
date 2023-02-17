@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 
-import { App } from "@/components/app";
+import { App } from "@/extension/components/app";
 
 import "@/styles/null.sass";
 import "@/styles/global.sass";
