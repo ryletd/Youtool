@@ -1,6 +1,6 @@
-export const getItem = async <T>(name: string): Promise<T | null> => {
+export const getItem = async <T>(names: string | string[]): Promise<T | null> => {
   try {
-    const value = await chrome.storage.sync.get(name);
+    const value = await chrome.storage.sync.get(names);
 
     return value as T;
   } catch {

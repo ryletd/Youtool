@@ -1,36 +1,42 @@
 import { useState, useEffect } from "react";
-import Draggable, { DraggableEvent, DraggableData } from "react-draggable";
+import Draggable, { DraggableEvent, DraggableData, ControlPosition } from "react-draggable";
 import classNames from "classnames";
 
 import { DEFAULT_SPEEDS } from "@/constants/default-speeds";
+
 import { getItem } from "@/chrome/storage/get-item";
+import { setItem } from "@/chrome/storage/set-item";
 
 import "./block.sass";
 
-type Position = {
-  x: number;
-  y: number;
-};
-
 export const Block = () => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
+  const [position, setPosition] = useState<ControlPosition>({ x: 0, y: 0 });
   const [speeds, setSpeeds] = useState<string[]>(DEFAULT_SPEEDS);
 
   const onDrag = (event: DraggableEvent, { x, y }: DraggableData) => {
     setPosition({ x, y });
   };
 
+  const onDragEnd = (event: DraggableEvent, { x, y }: DraggableData) => {
+    setIsDragging(false);
+    setItem("position", position);
+  };
+
   useEffect(() => {
-    const loadSavedSpeeds = async () => {
-      const storage = await getItem<{ speeds: string[] }>("speeds");
+    const loadSavedSettings = async () => {
+      const storage = await getItem<{ speeds: string[]; position: ControlPosition }>(["speeds", "position"]);
 
       if (storage?.speeds?.length) {
         setSpeeds(storage.speeds);
       }
+
+      if (storage?.position) {
+        setPosition(storage.position);
+      }
     };
 
-    loadSavedSpeeds();
+    loadSavedSettings();
   }, []);
 
   return (
@@ -39,7 +45,7 @@ export const Block = () => {
       position={position}
       onDrag={onDrag}
       onStart={() => setIsDragging(true)}
-      onStop={() => setIsDragging(false)}
+      onStop={onDragEnd}
     >
       <div className={classNames("youtool", { "no-transition": isDragging })}>
         {speeds.map((speed) => (
