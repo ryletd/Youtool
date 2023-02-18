@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Draggable, { DraggableEvent, DraggableData } from "react-draggable";
 import classNames from "classnames";
+
+import { DEFAULT_SPEEDS } from "@/constants/default-speeds";
+import { getItem } from "@/chrome/storage/get-item";
 
 import "./block.sass";
 
@@ -12,12 +15,23 @@ type Position = {
 export const Block = () => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
-
-  const speeds = ["1", "1.5", "2", "2.5", "3", "5"];
+  const [speeds, setSpeeds] = useState<string[]>(DEFAULT_SPEEDS);
 
   const onDrag = (event: DraggableEvent, { x, y }: DraggableData) => {
     setPosition({ x, y });
   };
+
+  useEffect(() => {
+    const loadSavedSpeeds = async () => {
+      const storage = await getItem<{ speeds: string[] }>("speeds");
+
+      if (storage?.speeds?.length) {
+        setSpeeds(storage.speeds);
+      }
+    };
+
+    loadSavedSpeeds();
+  }, []);
 
   return (
     <Draggable

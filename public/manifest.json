@@ -23,6 +23,6 @@
     }
   ],
 
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["scripting", "storage"],
   "host_permissions": ["*://www.youtube.com/*"]
 }

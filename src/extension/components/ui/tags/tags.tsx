@@ -1,11 +1,16 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Input, Tag } from "antd";
+
+import { DEFAULT_SPEEDS } from "@/constants/default-speeds";
+
+import { setItem } from "@/chrome/storage/set-item";
+import { getItem } from "@/chrome/storage/get-item";
 
 import "./tags.sass";
 
 export const Tags = () => {
-  const [tags, setTags] = useState<string[]>(["1", "1.5", "2", "2.5", "3", "5"]);
+  const [tags, setTags] = useState<string[]>(DEFAULT_SPEEDS);
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -26,6 +31,26 @@ export const Tags = () => {
 
     setTags(filteredTags);
   };
+
+  useEffect(() => {
+    const loadSavedSpeeds = async () => {
+      const storage = await getItem<{ speeds: string[] }>("speeds");
+
+      if (storage?.speeds?.length) {
+        setTags(storage.speeds);
+      }
+    };
+
+    loadSavedSpeeds();
+  }, []);
+
+  useEffect(() => {
+    const saveSpeeds = async () => {
+      setItem("speeds", tags);
+    };
+
+    saveSpeeds();
+  }, [tags]);
 
   return (
     <div className="tags">
