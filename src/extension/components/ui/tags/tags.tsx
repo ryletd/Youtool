@@ -5,7 +5,7 @@ import { Input, Tag } from "antd";
 import "./tags.sass";
 
 export const Tags = () => {
-  const [tags, setTags] = useState<string[]>(["1", "1.5", "2", "2.5"]);
+  const [tags, setTags] = useState<string[]>(["1", "1.5", "2", "2.5", "3", "5"]);
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -14,7 +14,7 @@ export const Tags = () => {
 
     // 16 - max video speed in browser
     if (speedRate && speedRate <= 16 && !tags.includes(inputValue)) {
-      setTags([...tags, inputValue]);
+      setTags([...tags, inputValue].sort());
     }
 
     setInputVisible(false);
