@@ -9,8 +9,12 @@ import { getItem } from "@/chrome/storage/get-item";
 
 import "./tags.sass";
 
+type Storage = {
+  speeds: number[];
+};
+
 export const Tags = () => {
-  const [tags, setTags] = useState<string[]>(DEFAULT_SPEEDS);
+  const [tags, setTags] = useState<number[]>(DEFAULT_SPEEDS);
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -18,15 +22,15 @@ export const Tags = () => {
     const speedRate = Number(inputValue);
 
     // 16 - max video speed in browser
-    if (speedRate && speedRate <= 16 && !tags.includes(inputValue)) {
-      setTags([...tags, inputValue].sort());
+    if (speedRate && speedRate <= 16 && !tags.includes(speedRate)) {
+      setTags([...tags, speedRate].sort());
     }
 
     setInputVisible(false);
     setInputValue("");
   };
 
-  const removeTag = (removedTag: string) => {
+  const removeTag = (removedTag: number) => {
     const filteredTags = tags.filter((tag) => tag !== removedTag);
 
     setTags(filteredTags);
@@ -34,7 +38,7 @@ export const Tags = () => {
 
   useEffect(() => {
     const loadSavedSpeeds = async () => {
-      const storage = await getItem<{ speeds: string[] }>("speeds");
+      const storage = await getItem<Storage>("speeds");
 
       if (storage?.speeds?.length) {
         setTags(storage.speeds);

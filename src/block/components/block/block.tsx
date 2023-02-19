@@ -3,29 +3,41 @@ import Draggable, { DraggableEvent, DraggableData, ControlPosition } from "react
 import classNames from "classnames";
 
 import { DEFAULT_SPEEDS } from "@/constants/default-speeds";
+import { useVideoSpy } from "@/block/hooks/use-video-spy";
 
 import { getItem } from "@/chrome/storage/get-item";
 import { setItem } from "@/chrome/storage/set-item";
 
 import "./block.sass";
 
+type Storage = {
+  speeds: number[];
+  position: ControlPosition;
+};
+
 export const Block = () => {
+  const [speeds, setSpeeds] = useState<number[]>(DEFAULT_SPEEDS);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [position, setPosition] = useState<ControlPosition>({ x: 0, y: 0 });
-  const [speeds, setSpeeds] = useState<string[]>(DEFAULT_SPEEDS);
+  const [activeSpeed, setActiveSpeed] = useState<number>(1);
+  useVideoSpy(activeSpeed);
 
   const onDrag = (event: DraggableEvent, { x, y }: DraggableData) => {
     setPosition({ x, y });
   };
 
-  const onDragEnd = (event: DraggableEvent, { x, y }: DraggableData) => {
+  const onDragEnd = () => {
     setIsDragging(false);
     setItem("position", position);
   };
 
+  const onChangeSpeed = (speed: number) => {
+    setActiveSpeed(speed);
+  };
+
   useEffect(() => {
     const loadSavedSettings = async () => {
-      const storage = await getItem<{ speeds: string[]; position: ControlPosition }>(["speeds", "position"]);
+      const storage = await getItem<Storage>(["speeds", "position"]);
 
       if (storage?.speeds?.length) {
         setSpeeds(storage.speeds);
@@ -49,7 +61,11 @@ export const Block = () => {
     >
       <div className={classNames("youtool", { "no-transition": isDragging })}>
         {speeds.map((speed) => (
-          <button key={speed} className="youtool-button">
+          <button
+            key={speed}
+            className={classNames("youtool-button", { active: activeSpeed === speed })}
+            onClick={() => onChangeSpeed(speed)}
+          >
             {speed}
           </button>
         ))}
