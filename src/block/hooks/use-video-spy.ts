@@ -1,11 +1,26 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
-export const useVideoSpy = (speed: number) => {
+type Mutation = {
+  target: Node;
+  addedNodes?: NodeList;
+  removedNodes?: NodeList;
+};
+
+type ReturnType = [activeSpeed: number, setActiveSpeed: (speed: number) => void];
+
+export const useVideoSpy = (): ReturnType => {
+  const [activeSpeed, setActiveSpeed] = useState<number>(1);
   const observer = useRef<MutationObserver | null>(null);
 
   useEffect(() => {
-    const onMutate = (mutations: Pick<MutationRecord, "target">[]) => {
-      mutations.forEach(({ target }) => {
+    const onPlayBackRateChange = ({ target }: Event) => {
+      if (!(target instanceof HTMLVideoElement)) return;
+
+      setActiveSpeed(target.playbackRate);
+    };
+
+    const onMutate = (mutations: Mutation[]) => {
+      mutations.forEach(({ target, addedNodes, removedNodes }) => {
         if (!(target instanceof HTMLElement)) return;
 
         const videos = target.querySelectorAll("video");
@@ -13,7 +28,15 @@ export const useVideoSpy = (speed: number) => {
         if (!videos.length) return;
 
         videos.forEach((video) => {
-          video.playbackRate = speed;
+          video.playbackRate = activeSpeed;
+
+          if (addedNodes?.length) {
+            video.addEventListener("ratechange", onPlayBackRateChange);
+          }
+
+          if (removedNodes?.length) {
+            video.removeEventListener("ratechange", onPlayBackRateChange);
+          }
         });
       });
     };
@@ -28,5 +51,7 @@ export const useVideoSpy = (speed: number) => {
         observer.current.disconnect();
       }
     };
-  }, [speed]);
+  }, [activeSpeed]);
+
+  return [activeSpeed, setActiveSpeed];
 };

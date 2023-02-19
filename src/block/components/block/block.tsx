@@ -19,8 +19,7 @@ export const Block = () => {
   const [speeds, setSpeeds] = useState<number[]>(DEFAULT_SPEEDS);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [position, setPosition] = useState<ControlPosition>({ x: 0, y: 0 });
-  const [activeSpeed, setActiveSpeed] = useState<number>(1);
-  useVideoSpy(activeSpeed);
+  const [activeSpeed, setActiveSpeed] = useVideoSpy();
 
   const onDrag = (event: DraggableEvent, { x, y }: DraggableData) => {
     setPosition({ x, y });
@@ -29,10 +28,6 @@ export const Block = () => {
   const onDragEnd = () => {
     setIsDragging(false);
     setItem("position", position);
-  };
-
-  const onChangeSpeed = (speed: number) => {
-    setActiveSpeed(speed);
   };
 
   useEffect(() => {
@@ -52,24 +47,27 @@ export const Block = () => {
   }, []);
 
   return (
-    <Draggable
-      defaultPosition={position}
-      position={position}
-      onDrag={onDrag}
-      onStart={() => setIsDragging(true)}
-      onStop={onDragEnd}
-    >
-      <div className={classNames("youtool", { "no-transition": isDragging })}>
-        {speeds.map((speed) => (
-          <button
-            key={speed}
-            className={classNames("youtool-button", { active: activeSpeed === speed })}
-            onClick={() => onChangeSpeed(speed)}
-          >
-            {speed}
-          </button>
-        ))}
-      </div>
-    </Draggable>
+    <>
+      <div className="active-speed">{activeSpeed}</div>
+      <Draggable
+        defaultPosition={position}
+        position={position}
+        onDrag={onDrag}
+        onStart={() => setIsDragging(true)}
+        onStop={onDragEnd}
+      >
+        <div className={classNames("youtool", { "no-transition": isDragging })}>
+          {speeds.map((speed) => (
+            <button
+              key={speed}
+              className={classNames("youtool-button", { active: activeSpeed === speed })}
+              onClick={() => setActiveSpeed(speed)}
+            >
+              {speed}
+            </button>
+          ))}
+        </div>
+      </Draggable>
+    </>
   );
 };
