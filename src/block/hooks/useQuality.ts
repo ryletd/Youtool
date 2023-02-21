@@ -1,0 +1,48 @@
+import { MouseEvent } from "react";
+
+const CLASSES = {
+  SETTING_OPTIONS: ".ytp-settings-menu .ytp-panel-menu .ytp-menuitem[role='menuitem']",
+  BEST_QUALITY_BUTTON: ".ytp-quality-menu .ytp-panel-menu .ytp-menuitem",
+};
+
+export const useQuality = () => {
+  const setBestQuality = (event: MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+
+    const onMutate = (mutations: Pick<MutationRecord, "target">[], observer: MutationObserver) => {
+      console.log("mut");
+
+      mutations.forEach(async ({ target }) => {
+        if (!(target instanceof HTMLElement)) return;
+
+        const settingsOptions = target.querySelectorAll(CLASSES.SETTING_OPTIONS);
+
+        if (settingsOptions.length) {
+          const qualityButton = Array.from(settingsOptions).at(-1);
+
+          if (qualityButton instanceof HTMLElement) {
+            qualityButton.click();
+          }
+
+          return;
+        }
+
+        const bestQuality = document.querySelector(CLASSES.BEST_QUALITY_BUTTON);
+
+        if (bestQuality instanceof HTMLElement) {
+          bestQuality.click();
+
+          observer.disconnect();
+        }
+      });
+    };
+
+    const observer = new MutationObserver(onMutate);
+    observer.observe(document, { childList: true, subtree: true });
+    setTimeout(observer.disconnect, 3000);
+    // Imitate mutation when user change video speed
+    onMutate([{ target: document.body }], observer);
+  };
+
+  return setBestQuality;
+};
