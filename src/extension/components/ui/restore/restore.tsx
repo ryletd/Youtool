@@ -11,7 +11,7 @@ export const Restore = () => {
 
   return (
     <Button className="restore-button" onClick={restoreSettings}>
-      Restore All
+      Restore
     </Button>
   );
 };
