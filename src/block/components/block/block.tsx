@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { DEFAULT_SPEEDS } from "@/constants/default-speeds";
 import { useVideoSpy } from "@/block/hooks/use-video-spy";
-import { useQuality } from "@/block/hooks/useQuality";
+import { useQuality } from "@/block/hooks/use-quality";
 
 import { getItem } from "@/chrome/storage/get-item";
 import { setItem } from "@/chrome/storage/set-item";

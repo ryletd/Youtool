@@ -1,4 +1,4 @@
-import { MouseEvent } from "react";
+import { MouseEvent, useRef } from "react";
 
 const CLASSES = {
   SETTING_OPTIONS: ".ytp-settings-menu .ytp-panel-menu .ytp-menuitem[role='menuitem']",
@@ -6,6 +6,8 @@ const CLASSES = {
 };
 
 export const useQuality = () => {
+  const observer = useRef<MutationObserver | null>(null);
+
   const setBestQuality = (event: MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
 
@@ -37,11 +39,13 @@ export const useQuality = () => {
       });
     };
 
-    const observer = new MutationObserver(onMutate);
-    observer.observe(document, { childList: true, subtree: true });
-    setTimeout(observer.disconnect, 3000);
+    // If observer already running stop it (anti-spam)
+    observer.current?.disconnect();
+    observer.current = new MutationObserver(onMutate);
+    observer.current.observe(document, { childList: true, subtree: true });
+    setTimeout(observer.current.disconnect, 3000);
     // Imitate mutation when user change video speed
-    onMutate([{ target: document.body }], observer);
+    onMutate([{ target: document.body }], observer.current);
   };
 
   return setBestQuality;
