@@ -33,8 +33,7 @@ export const Block = () => {
 
   const isBlockAttached = (Object.keys(attachPosition) as (keyof AttachPosition)[])
     .map((key) => attachPosition[key])
-    .filter(Boolean)
-    .at(0);
+    .find((item) => item);
 
   useEffect(() => {
     const loadSavedSettings = async () => {
