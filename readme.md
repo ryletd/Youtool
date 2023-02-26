@@ -1,6 +1,6 @@
-<h2 style="text-align: center;font-size: 50px;">Instruction</h2>
+# Instruction
 
-# Installation
+## Installation
 
 ### The extension is located in the `dist` folder. To install the extension, you need to:
 
@@ -12,7 +12,7 @@
 
 ![load](https://i.ibb.co/syb3K9H/0526a9a6e277.png)
 
-# **Settings**
+## **Settings**
 
 - Adding | Removing new video speed (from 0 to 16)
 
@@ -22,7 +22,7 @@
 
 ![settings](https://i.ibb.co/L1mrfz6/bd8900bdc463.png)
 
-# **Functionality**
+## **Functionality**
 
 - By default, speed switching buttons are located in the upper left corner
 
@@ -36,9 +36,9 @@
 
 ![block](https://i.ibb.co/Cmc0FXv/7ea2a83b6507.png)
 
-<h2 style="text-align: center;font-size: 50px;">Инструкция</h2>
+# Инструкция
 
-# Установка
+## Установка
 
 ### Расширение находится в папке `dist`. Для установки расширения нужно:
 
@@ -50,7 +50,7 @@
 
 ![load](https://i.ibb.co/syb3K9H/0526a9a6e277.png)
 
-# **Настройки**
+## **Настройки**
 
 - Добавление | Удаление новой скорости видео (от 0 до 16)
 
@@ -60,7 +60,7 @@
 
 ![settings](https://i.ibb.co/L1mrfz6/bd8900bdc463.png)
 
-# **Функционал**
+## **Функционал**
 
 - По дефолту кнопки переключения скорости находятся сверу слева
 
