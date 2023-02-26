@@ -20,7 +20,7 @@
 
 - Restore all default settings
 
-![settings](https://i.ibb.co/L1mrfz6/bd8900bdc463.png)
+![settings](https://i.ibb.co/ns63pML/a0ae8418cbd2.png)
 
 ## **Functionality**
 
@@ -58,7 +58,7 @@
 
 - Восстановить все настройки по умолчанию
 
-![settings](https://i.ibb.co/L1mrfz6/bd8900bdc463.png)
+![settings](https://i.ibb.co/ns63pML/a0ae8418cbd2.png)
 
 ## **Функционал**
 
