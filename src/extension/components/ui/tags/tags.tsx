@@ -9,9 +9,7 @@ import { getItem } from "@/chrome/storage/get-item";
 
 import "./tags.sass";
 
-type Storage = {
-  speeds: number[];
-};
+import type { Storage } from "@/types/storage";
 
 export const Tags = () => {
   const [tags, setTags] = useState<number[]>(DEFAULT_SPEEDS);

@@ -12,8 +12,6 @@ export const useQuality = () => {
     event.preventDefault();
 
     const onMutate = (mutations: Pick<MutationRecord, "target">[], observer: MutationObserver) => {
-      console.log("mut");
-
       mutations.forEach(async ({ target }) => {
         if (!(target instanceof HTMLElement)) return;
 

@@ -11,15 +11,14 @@ import { setItem } from "@/chrome/storage/set-item";
 
 import "./block.sass";
 
-type Storage = {
-  speeds: number[];
-  position: ControlPosition;
-};
+import type { Storage } from "@/types/storage";
+import type { AttachPosition } from "@/types/attach-position";
 
 export const Block = () => {
   const [speeds, setSpeeds] = useState<number[]>(DEFAULT_SPEEDS);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [position, setPosition] = useState<ControlPosition>({ x: 0, y: 0 });
+  const [attachPosition, setAttachPosition] = useState<AttachPosition>({});
   const [activeSpeed, setActiveSpeed] = useVideoSpy();
   const setBestQuality = useQuality();
 
@@ -32,9 +31,14 @@ export const Block = () => {
     setItem("position", position);
   };
 
+  const isBlockAttached = (Object.keys(attachPosition) as (keyof AttachPosition)[])
+    .map((key) => attachPosition[key])
+    .filter(Boolean)
+    .at(0);
+
   useEffect(() => {
     const loadSavedSettings = async () => {
-      const storage = await getItem<Storage>(["speeds", "position"]);
+      const storage = await getItem<Storage>(["speeds", "position", "attach"]);
 
       if (storage?.speeds?.length) {
         setSpeeds(storage.speeds);
@@ -42,6 +46,10 @@ export const Block = () => {
 
       if (storage?.position) {
         setPosition(storage.position);
+      }
+
+      if (storage?.attach) {
+        setAttachPosition(storage.attach);
       }
     };
 
@@ -54,12 +62,19 @@ export const Block = () => {
       <div onContextMenu={setBestQuality}>
         <Draggable
           defaultPosition={position}
-          position={position}
+          position={isBlockAttached ? undefined : position}
           onDrag={onDrag}
           onStart={() => setIsDragging(true)}
           onStop={onDragEnd}
+          disabled={isBlockAttached}
         >
-          <div className={classNames("youtool", { "no-transition": isDragging })}>
+          <div
+            className={classNames("youtool", {
+              "no-transition": isDragging,
+              "attach-top-left": attachPosition.topLeft,
+              "attach-bottom-left": attachPosition.bottomLeft,
+            })}
+          >
             {speeds.map((speed) => (
               <button
                 key={speed}
