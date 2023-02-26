@@ -7,31 +7,31 @@ import { DEFAULT_SPEEDS } from "@/constants/default-speeds";
 import { setItem } from "@/chrome/storage/set-item";
 import { getItem } from "@/chrome/storage/get-item";
 
-import "./tags.sass";
+import "./speeds.sass";
 
 import type { Storage } from "@/types/storage";
 
-export const Tags = () => {
-  const [tags, setTags] = useState<number[]>(DEFAULT_SPEEDS);
+export const Speeds = () => {
+  const [speeds, setSpeeds] = useState<number[]>(DEFAULT_SPEEDS);
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
 
-  const addNewTag = () => {
+  const addNewSpeed = () => {
     const speedRate = Number(inputValue);
 
     // 16 - max video speed in browser
-    if (speedRate && speedRate <= 16 && !tags.includes(speedRate)) {
-      setTags([...tags, speedRate].sort());
+    if (speedRate && speedRate <= 16 && !speeds.includes(speedRate)) {
+      setSpeeds([...speeds, speedRate].sort());
     }
 
     setInputVisible(false);
     setInputValue("");
   };
 
-  const removeTag = (removedTag: number) => {
-    const filteredTags = tags.filter((tag) => tag !== removedTag);
+  const removeSpeed = (removedSpeed: number) => {
+    const filteredSpeeds = speeds.filter((speed) => speed !== removedSpeed);
 
-    setTags(filteredTags);
+    setSpeeds(filteredSpeeds);
   };
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const Tags = () => {
       const storage = await getItem<Storage>("speeds");
 
       if (storage?.speeds?.length) {
-        setTags(storage.speeds);
+        setSpeeds(storage.speeds);
       }
     };
 
@@ -48,25 +48,25 @@ export const Tags = () => {
 
   useEffect(() => {
     const saveSpeeds = async () => {
-      setItem("speeds", tags);
+      setItem("speeds", speeds);
     };
 
     saveSpeeds();
-  }, [tags]);
+  }, [speeds]);
 
   return (
-    <div className="tags">
-      {tags.map((tag) => (
-        <span key={tag}>
+    <div className="speeds">
+      {speeds.map((speed) => (
+        <span key={speed}>
           <Tag
             closable
-            className="tag"
+            className="speed"
             onClose={(event) => {
               event.preventDefault();
-              removeTag(tag);
+              removeSpeed(speed);
             }}
           >
-            {tag}
+            {speed}
           </Tag>
         </span>
       ))}
@@ -74,11 +74,11 @@ export const Tags = () => {
         <Input
           type="text"
           size="small"
-          className="tags-input"
+          className="speeds-input"
           value={inputValue}
           onChange={({ target }: ChangeEvent<HTMLInputElement>) => setInputValue(target.value)}
-          onBlur={addNewTag}
-          onPressEnter={addNewTag}
+          onBlur={addNewSpeed}
+          onPressEnter={addNewSpeed}
         />
       ) : (
         <Tag onClick={() => setInputVisible(true)}>
