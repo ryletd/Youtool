@@ -42,6 +42,13 @@ export const useQuality = () => {
     observer.current = new MutationObserver(onMutate);
     observer.current.observe(document, { childList: true, subtree: true });
     setTimeout(observer.current.disconnect, 3000);
+
+    const settingsButton = document.querySelector<HTMLButtonElement>(".ytp-settings-button");
+
+    if (settingsButton) {
+      settingsButton.click();
+    }
+
     // Imitate mutation when user change video speed
     onMutate([{ target: document.body }], observer.current);
   };
