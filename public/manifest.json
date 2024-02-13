@@ -23,6 +23,6 @@
     }
   ],
 
-  "permissions": ["scripting", "storage"],
+  "permissions": ["storage"],
   "host_permissions": ["*://www.youtube.com/watch*"]
 }

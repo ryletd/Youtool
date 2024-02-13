@@ -15,7 +15,7 @@ export const useVideoSpy = (): ReturnType => {
   useEffect(() => {
     const onPlayBackRateChange = ({ target }: Event) => {
       if (!(target instanceof HTMLVideoElement)) return;
-      // For fixing bug. When user change tab or resize browser window, Youtube set playbackRate = 0
+      // For fixing bug. When user change active tab or resize browser window, Youtube set playbackRate = 0
       if (target.playbackRate === 1) return;
 
       setActiveSpeed(target.playbackRate);
