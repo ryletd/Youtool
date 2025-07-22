@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { DEFAULT_STORAGE } from "@/constants/default-speeds";
 import { useVideoSpy } from "@/block/hooks/use-video-spy";
-import { useQuality } from "@/block/hooks/use-quality";
+import { useObserver } from "@/block/hooks/use-observer";
 
 import { getItem } from "@/chrome/storage/get-item";
 import { setItem } from "@/chrome/storage/set-item";
@@ -16,10 +16,9 @@ import type { Storage } from "@/types/storage";
 
 export const Block = () => {
   const [storage, setStorage] = useState<Storage>(DEFAULT_STORAGE);
-  const [loop, setLoop] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeSpeed, setActiveSpeed] = useVideoSpy();
-  const setBestQuality = useQuality();
+  const { setBestQuality, loop, toggleLoop } = useObserver();
 
   const onDrag = (event: DraggableEvent, { x, y }: DraggableData) => {
     setStorage((oldStorage) => ({ ...oldStorage, position: { x, y } }));
@@ -62,12 +61,6 @@ export const Block = () => {
     loadSavedSettings();
   }, []);
 
-  const loopVideo = () => {
-    setLoop((isLoop) => !isLoop);
-
-    document.querySelector<HTMLButtonElement>(".ytp-contextmenu .ytp-menuitem")?.click();
-  };
-
   return (
     <>
       <div className="active-speed">{activeSpeed}</div>
@@ -97,8 +90,10 @@ export const Block = () => {
               </button>
             ))}
             {storage.loopButton && (
-              <button className={classNames("youtool-button", { active: loop })} onClick={loopVideo}>
-                {122}
+              <button className={classNames("youtool-button", { active: loop })} onClick={toggleLoop}>
+                <svg fill="none" height="24" viewBox="0 0 24 24" width="24">
+                  <path d="M7 7H17V10L21 6L17 2V5H5V11H7V7ZM17 17H7V14L3 18L7 22V19H19V13H17V17Z" fill="white"></path>
+                </svg>
               </button>
             )}
           </div>
