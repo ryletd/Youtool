@@ -1,5 +1,6 @@
 import { Speeds } from "@/extension/components/ui/speeds";
 import { Attach } from "@/extension/components/ui/attach";
+import { Loop } from "@/extension/components/ui/loop";
 import { Restore } from "@/extension/components/ui/restore";
 
 import "./main-view.sass";
@@ -10,6 +11,8 @@ export const MainView = () => (
     <Speeds />
     <h2 className="title">Attach speed buttons block</h2>
     <Attach />
+    <h2 className="title">Loop button</h2>
+    <Loop />
     <h2 className="title">Restore all settings</h2>
     <Restore />
   </section>

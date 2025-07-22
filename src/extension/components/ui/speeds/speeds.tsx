@@ -9,8 +9,6 @@ import { getItem } from "@/chrome/storage/get-item";
 
 import "./speeds.sass";
 
-import type { Storage } from "@/types/storage";
-
 export const Speeds = () => {
   const [speeds, setSpeeds] = useState<number[]>(DEFAULT_SPEEDS);
   const [inputVisible, setInputVisible] = useState<boolean>(false);
@@ -36,7 +34,7 @@ export const Speeds = () => {
 
   useEffect(() => {
     const loadSavedSpeeds = async () => {
-      const storage = await getItem<Storage>("speeds");
+      const storage = await getItem("speeds");
 
       if (storage?.speeds?.length) {
         setSpeeds(storage.speeds);

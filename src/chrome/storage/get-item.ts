@@ -1,8 +1,10 @@
-export const getItem = async <T>(names: string | string[]): Promise<T | null> => {
-  try {
-    const value = await chrome.storage.sync.get(names);
+import type { Storage } from "@/types/storage";
 
-    return value as T;
+export const getItem = async (names: keyof Storage | (keyof Storage)[]): Promise<Storage | null> => {
+  try {
+    const value = await chrome.storage.sync.get(names as Storage);
+
+    return value as Storage;
   } catch {
     return null;
   }

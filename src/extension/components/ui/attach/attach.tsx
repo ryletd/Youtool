@@ -5,7 +5,6 @@ import { getItem } from "@/chrome/storage/get-item";
 import { setItem } from "@/chrome/storage/set-item";
 
 import type { AttachPosition } from "@/types/attach-position";
-import type { Storage } from "@/types/storage";
 
 export const Attach = () => {
   const [position, setPosition] = useState<AttachPosition>({});
@@ -18,7 +17,7 @@ export const Attach = () => {
 
   useEffect(() => {
     const loadSavedSettings = async () => {
-      const storage = await getItem<Storage>(["attach"]);
+      const storage = await getItem(["attach"]);
 
       if (storage?.attach) {
         setPosition(storage.attach);

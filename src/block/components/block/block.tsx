@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Draggable, { DraggableEvent, DraggableData, ControlPosition } from "react-draggable";
 import classNames from "classnames";
 
-import { DEFAULT_SPEEDS } from "@/constants/default-speeds";
+import { DEFAULT_STORAGE } from "@/constants/default-speeds";
 import { useVideoSpy } from "@/block/hooks/use-video-spy";
 import { useQuality } from "@/block/hooks/use-quality";
 
@@ -11,57 +11,70 @@ import { setItem } from "@/chrome/storage/set-item";
 
 import "./block.sass";
 
-import type { Storage } from "@/types/storage";
 import type { AttachPosition } from "@/types/attach-position";
+import type { Storage } from "@/types/storage";
 
 export const Block = () => {
-  const [speeds, setSpeeds] = useState<number[]>(DEFAULT_SPEEDS);
+  const [storage, setStorage] = useState<Storage>(DEFAULT_STORAGE);
+  const [loop, setLoop] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [position, setPosition] = useState<ControlPosition>({ x: 0, y: 0 });
-  const [attachPosition, setAttachPosition] = useState<AttachPosition>({});
   const [activeSpeed, setActiveSpeed] = useVideoSpy();
   const setBestQuality = useQuality();
 
   const onDrag = (event: DraggableEvent, { x, y }: DraggableData) => {
-    setPosition({ x, y });
+    setStorage((oldStorage) => ({ ...oldStorage, position: { x, y } }));
   };
 
   const onDragEnd = () => {
     setIsDragging(false);
-    setItem("position", position);
+    setItem("position", storage.position);
   };
 
-  const isBlockAttached = (Object.keys(attachPosition) as (keyof AttachPosition)[])
-    .map((key) => attachPosition[key])
+  const isBlockAttached = (Object.keys(storage.attach ?? {}) as (keyof AttachPosition)[])
+    .map((key) => (storage.attach ?? {})[key])
     .find((item) => item);
 
   useEffect(() => {
     const loadSavedSettings = async () => {
-      const storage = await getItem<Storage>(["speeds", "position", "attach"]);
+      const originalStorage = await getItem(["speeds", "position", "attach", "loopButton"]);
 
-      if (storage?.speeds?.length) {
-        setSpeeds(storage.speeds);
+      if (!originalStorage) {
+        return;
       }
 
-      if (storage?.position) {
-        setPosition(storage.position);
+      if (originalStorage.speeds?.length) {
+        setStorage((oldStorage) => ({ ...oldStorage, speeds: originalStorage.speeds }));
       }
 
-      if (storage?.attach) {
-        setAttachPosition(storage.attach);
+      if (originalStorage.position) {
+        setStorage((oldStorage) => ({ ...oldStorage, position: originalStorage.position }));
+      }
+
+      if (originalStorage.attach) {
+        setStorage((oldStorage) => ({ ...oldStorage, attach: originalStorage.attach }));
+      }
+
+      if (originalStorage.loopButton) {
+        setStorage((oldStorage) => ({ ...oldStorage, loopButton: originalStorage.loopButton }));
       }
     };
 
     loadSavedSettings();
   }, []);
 
+  const loopVideo = () => {
+    setLoop((isLoop) => !isLoop);
+
+    document.querySelector<HTMLButtonElement>(".ytp-contextmenu .ytp-menuitem")?.click();
+  };
+
   return (
     <>
       <div className="active-speed">{activeSpeed}</div>
       <div onContextMenu={setBestQuality}>
         <Draggable
-          defaultPosition={position}
-          position={isBlockAttached ? undefined : position}
+          defaultPosition={storage.position}
+          position={isBlockAttached ? undefined : storage.position}
           onDrag={onDrag}
           onStart={() => setIsDragging(true)}
           onStop={onDragEnd}
@@ -70,11 +83,11 @@ export const Block = () => {
           <div
             className={classNames("youtool", {
               "no-transition": isDragging,
-              "attach-top-left": attachPosition.topLeft,
-              "attach-bottom-left": attachPosition.bottomLeft,
+              "attach-top-left": storage.attach?.topLeft,
+              "attach-bottom-left": storage.attach?.bottomLeft,
             })}
           >
-            {speeds.map((speed) => (
+            {storage.speeds?.map((speed) => (
               <button
                 key={speed}
                 className={classNames("youtool-button", { active: activeSpeed === speed })}
@@ -83,6 +96,11 @@ export const Block = () => {
                 {speed}
               </button>
             ))}
+            {storage.loopButton && (
+              <button className={classNames("youtool-button", { active: loop })} onClick={loopVideo}>
+                {122}
+              </button>
+            )}
           </div>
         </Draggable>
       </div>
