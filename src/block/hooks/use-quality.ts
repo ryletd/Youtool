@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import {} from "antd/";
+import { useRef } from "react";
 
 import type { MouseEvent } from "react";
 
@@ -7,19 +6,10 @@ const CLASSES = {
   SETTING_OPTIONS: ".ytp-settings-menu .ytp-panel-menu .ytp-menuitem[role='menuitem']",
   BEST_QUALITY_BUTTON: ".ytp-quality-menu .ytp-panel-menu .ytp-menuitem",
   SETTINGS_BUTTON: ".ytp-settings-button",
-  LOOP_BUTTON: ".ytp-contextmenu .ytp-menuitem",
-  PLAYER: ".html5-video-player",
 };
 
-export const useObserver = () => {
-  const [loop, setLoop] = useState<boolean>(false);
+export const useQuality = () => {
   const observer = useRef<MutationObserver | null>(null);
-  const loopObserver = useRef<MutationObserver | null>(null);
-
-  useEffect(() => {
-    loopObserver.current = new MutationObserver(onLoopMutate);
-    loopObserver.current.observe(document, { childList: true, subtree: true });
-  }, []);
 
   const setBestQuality = (event: MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -66,24 +56,5 @@ export const useObserver = () => {
     onMutate([{ target: document.body }], observer.current);
   };
 
-  function onLoopMutate(mutations: Pick<MutationRecord, "target">[]) {
-    mutations.forEach(async () => {
-      const isEnabled =
-        document.querySelector<HTMLButtonElement>(CLASSES.LOOP_BUTTON)?.getAttribute("aria-checked") === "true";
-
-      setLoop(isEnabled);
-    });
-  }
-
-  const toggleLoop = () => {
-    const player = document.querySelector<HTMLDivElement>(CLASSES.PLAYER);
-
-    if (player) {
-      player.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, button: 2 } as any));
-
-      setTimeout(() => document.querySelector<HTMLButtonElement>(CLASSES.LOOP_BUTTON)?.click(), 50);
-    }
-  };
-
-  return { setBestQuality, loop, toggleLoop };
+  return { setBestQuality };
 };

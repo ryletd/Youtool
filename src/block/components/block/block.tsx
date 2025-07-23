@@ -4,7 +4,8 @@ import classNames from "classnames";
 
 import { DEFAULT_STORAGE } from "@/constants/default-speeds";
 import { useVideoSpy } from "@/block/hooks/use-video-spy";
-import { useObserver } from "@/block/hooks/use-observer";
+import { useQuality } from "@/block/hooks/use-quality";
+import { useLoop } from "@/block/hooks/use-loop";
 
 import { getItem } from "@/chrome/storage/get-item";
 import { setItem } from "@/chrome/storage/set-item";
@@ -18,7 +19,8 @@ export const Block = () => {
   const [storage, setStorage] = useState<Storage>(DEFAULT_STORAGE);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeSpeed, setActiveSpeed] = useVideoSpy();
-  const { setBestQuality, loop, toggleLoop } = useObserver();
+  const { setBestQuality } = useQuality();
+  const { loop, toggleLoop } = useLoop();
 
   const onDrag = (event: DraggableEvent, { x, y }: DraggableData) => {
     setStorage((oldStorage) => ({ ...oldStorage, position: { x, y } }));
@@ -53,7 +55,7 @@ export const Block = () => {
         setStorage((oldStorage) => ({ ...oldStorage, attach: originalStorage.attach }));
       }
 
-      if (originalStorage.loopButton) {
+      if (originalStorage.loopButton !== undefined) {
         setStorage((oldStorage) => ({ ...oldStorage, loopButton: originalStorage.loopButton }));
       }
     };

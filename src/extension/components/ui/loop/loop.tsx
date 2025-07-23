@@ -8,7 +8,7 @@ export const Loop = () => {
   const [loopButton, setLoopButton] = useState<boolean>(false);
 
   useEffect(() => {
-    getItem("loopButton").then((result) => setLoopButton(result?.loopButton ?? false));
+    getItem("loopButton").then((result) => setLoopButton(result?.loopButton ?? true));
   }, []);
 
   const changeLoopButtonState = async (enabled: boolean) => {
